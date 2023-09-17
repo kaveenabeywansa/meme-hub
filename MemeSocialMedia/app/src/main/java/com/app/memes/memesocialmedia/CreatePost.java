@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -28,6 +30,8 @@ import java.util.Random;
 public class CreatePost extends AppCompatActivity {
     private StorageReference mStorageRef;
     ImageView myimage;
+
+    private String uploadFileLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,16 @@ public class CreatePost extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(CreatePost.this, "Successfully Uplaod", Toast.LENGTH_SHORT).show();
+
+                // get upload url
+                sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.i("Link", uri.toString());
+                        uploadFileLink = uri.toString();
+                        // TODO: execute the remaining tasks
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
