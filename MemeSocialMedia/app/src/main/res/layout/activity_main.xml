@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <ListView
+        android:id="@+id/item_list_data"
+        android:layout_marginTop="65dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainFab"
         android:layout_width="wrap_content"
