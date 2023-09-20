@@ -13,9 +13,13 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.app.memes.memesocialmedia.interfaces.MemePostService;
+import com.app.memes.memesocialmedia.models.Post;
+import com.app.memes.memesocialmedia.services.RetrofitClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,11 +29,20 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreatePost extends AppCompatActivity {
     private StorageReference mStorageRef;
+    private MemePostService memePostService;
     ImageView myimage;
+    EditText postCaption;
+    EditText postAuthor;
 
     private String uploadFileLink;
 
@@ -39,7 +52,11 @@ public class CreatePost extends AppCompatActivity {
         setContentView(R.layout.activity_create_post);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        memePostService = RetrofitClient.getClient().create(MemePostService.class);
+
         myimage = findViewById(R.id.myimage);
+        postCaption = findViewById(R.id.post_caption);
+        postAuthor = findViewById(R.id.post_author);
     }
 
     public void uploadImage(View v) {
@@ -59,6 +76,8 @@ public class CreatePost extends AppCompatActivity {
     }
 
     private void onCaptureImageResult(Intent data) {
+        findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
@@ -76,7 +95,7 @@ public class CreatePost extends AppCompatActivity {
         sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(CreatePost.this, "Successfully Uplaod", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(CreatePost.this, "Successfully Uplaod", Toast.LENGTH_SHORT).show();
 
                 // get upload url
                 sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -85,6 +104,7 @@ public class CreatePost extends AppCompatActivity {
                         Log.i("Link", uri.toString());
                         uploadFileLink = uri.toString();
                         // TODO: execute the remaining tasks
+                        createPost(uri.toString());
                     }
                 });
             }
@@ -92,6 +112,32 @@ public class CreatePost extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(CreatePost.this,"Failed to upload", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createPost(String imgUrl) {
+        String memeId = UUID.randomUUID().toString();
+        String captionTxt = postCaption.getText().toString();
+        String author = postAuthor.getText().toString();
+
+        // upload the new details to the server
+        Post newPost = new Post(memeId, author, captionTxt, imgUrl, 0);
+        Call call = memePostService.addMeme(newPost);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                Toast.makeText(CreatePost.this, "Meme Uploaded !", Toast.LENGTH_SHORT).show();
+                // remove busy activity
+                findViewById(R.id.please_wait).setVisibility(View.GONE);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(CreatePost.this, "An error occurred !", Toast.LENGTH_SHORT).show();
+                findViewById(R.id.please_wait).setVisibility(View.GONE);
+                Log.i("Link",t.toString());
             }
         });
     }

@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class Post {
     @SerializedName("_id")
     private String id;
-    @SerializedName("dateTime")
-    private String dateTime;
+    @SerializedName("author")
+    private String author;
     @SerializedName("text")
     private String text;
     @SerializedName("imageLink")
@@ -18,9 +18,9 @@ public class Post {
 
     }
 
-    public Post(String id, String dateTime, String text, String imageLink, int likes) {
+    public Post(String id, String author, String text, String imageLink, int likes) {
         this.id = id;
-        this.dateTime = dateTime;
+        this.author = author;
         this.text = text;
         this.imageLink = imageLink;
         this.likes = likes;
@@ -35,11 +35,11 @@ public class Post {
     }
 
     public String getDateTime() {
-        return dateTime;
+        return author;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public void setDateTime(String author) {
+        this.author = author;
     }
 
     public String getText() {
