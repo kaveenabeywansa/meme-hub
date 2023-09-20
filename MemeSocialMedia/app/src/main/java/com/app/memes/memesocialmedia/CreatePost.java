@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -44,6 +45,8 @@ public class CreatePost extends AppCompatActivity {
     EditText postCaption;
     EditText postAuthor;
 
+    Boolean isImgSelected = false;
+
     private String uploadFileLink;
 
     @Override
@@ -59,7 +62,7 @@ public class CreatePost extends AppCompatActivity {
         postAuthor = findViewById(R.id.post_author);
     }
 
-    public void uploadImage(View v) {
+    public void selectImage(View v) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 101);
     }
@@ -76,27 +79,43 @@ public class CreatePost extends AppCompatActivity {
     }
 
     private void onCaptureImageResult(Intent data) {
-        findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         byte bb[] = bytes.toByteArray();
         String file = Base64.encodeToString(bb, Base64.DEFAULT);
         myimage.setImageBitmap(thumbnail);
-
-        uploadToFirebase(bb);
+        isImgSelected = true;
     }
 
-    private void uploadToFirebase(byte[] bb) {
+    public void goBack(View v) {
+        finish();
+    }
+    public void submitMeme(View v) {
+        // simple validation - img or caption is available
+        if (!(isImgSelected || postCaption.getText().toString().length() > 0)) {
+            Toast.makeText(CreatePost.this, "Capture an image or enter caption to post!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // show loader
+        findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+
+        // get img to bytes
+        myimage.setDrawingCacheEnabled(true);
+        myimage.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) myimage.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imgData = baos.toByteArray();
+
+        // upload image
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         String filename = timeStamp + "_" + (new Random().nextInt(900) + 100);
         StorageReference sr = mStorageRef.child(filename + ".jpg");
-        sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        sr.putBytes(imgData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Toast.makeText(CreatePost.this, "Successfully Uplaod", Toast.LENGTH_SHORT).show();
-
                 // get upload url
                 sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override

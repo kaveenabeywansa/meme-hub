@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="whitecolor">#FFFFFF</color>
+    <color name="darkblue">#00021F</color>
+    <color name="orangecolor">#FF8400</color>
+    <color name="greencolor">#00C209</color>
+
+
+    <color name="mainMenuBtns">#2196F3</color>
+    <color name="mainMenuBtnTxt">#DBDBDB</color>
+    <color name="MenuBtnTxt">#FFFEFE</color>
+    <color name="viewListItemBck">#FFFFFF</color>
+
+    <color name="moreDetBtnBck">#0088FF</color>
+    <color name="moreDetBtnTxt">#FFFFFF</color>
+
+    <color name="dangerBtnBck">#F44336</color>
+    <color name="dangerBtnTxt">#F1F1F1</color>
 </resources>

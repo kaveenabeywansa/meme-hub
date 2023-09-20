@@ -60,15 +60,25 @@
         android:id="@+id/myimage"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:src="@mipmap/ic_launcher_round"
-        android:onClick="uploadImage"/>
+        android:src="@drawable/select_img"
+        android:onClick="selectImage"/>
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:onClick="uploadImage"
-        android:text="Create Post" />
+        android:onClick="submitMeme"
+        android:text="Create Post"
+        android:background="@color/material_dynamic_primary10"/>
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/dangerBtnBck"
+        android:onClick="goBack"
+        android:text="Back" />
 
 </LinearLayout>
