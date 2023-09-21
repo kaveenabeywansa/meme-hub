@@ -19,7 +19,7 @@ var Controller = function () {
     };
     this.getPosts = function () {
         return new Promise(function (resolve, reject) {
-            PostsSchema.find().exec().then(function (value) {
+            PostsSchema.find().sort({ _id: -1 }).exec().then(function (value) {
                 resolve({ status: 200, data: value });
             }).catch(function (reason) {
                 reject({ status: 404, message: "Error: " + reason });

@@ -25,7 +25,7 @@ router.post('/', function (req, res) {
 });
 router.get('/', function (req, res) {
     Controller.getPosts().then(function (data) {
-        res.status(data.status).send(data.data);
+        res.status(data.status).send({ data: data.data });
     }).catch(function (reason) {
         res.status(reason.status).send({ message: reason.message });
     })

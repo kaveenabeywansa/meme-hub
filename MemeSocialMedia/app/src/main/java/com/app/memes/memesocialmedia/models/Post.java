@@ -34,11 +34,11 @@ public class Post {
         this.id = id;
     }
 
-    public String getDateTime() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setDateTime(String author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 

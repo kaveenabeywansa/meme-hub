@@ -15,6 +15,8 @@ import com.app.memes.memesocialmedia.R;
 import com.app.memes.memesocialmedia.models.Post;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class PostListAdapter extends ArrayAdapter<Post> {
@@ -35,11 +37,13 @@ public class PostListAdapter extends ArrayAdapter<Post> {
         convertView = layoutInflater.inflate(R.layout.post_list_item, parent, false);
 
         // init comps
+        TextView post_author = (TextView) convertView.findViewById(R.id.post_author);
         TextView post_text = (TextView) convertView.findViewById(R.id.post_text);
         TextView post_likes = (TextView) convertView.findViewById(R.id.post_likes);
         ImageView post_image = (ImageView) convertView.findViewById(R.id.post_image);
 
         // set values
+        post_author.setText((postList.get(position).getAuthor()));
         post_text.setText(postList.get(position).getText());
         post_likes.setText("\uD83D\uDD25" + postList.get(position).getLikes());
         Picasso.with(context).load(postList.get(position).getImageLink()).into(post_image);
