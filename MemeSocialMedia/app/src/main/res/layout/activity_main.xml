@@ -55,10 +55,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:src="@drawable/baseline_cloud_upload_24"
+        android:contentDescription="Offline Queue"
+        app:layout_constraintBottom_toBottomOf="@id/mainFab"
+        app:layout_constraintEnd_toStartOf="@id/mainFab"
+        android:layout_marginRight="20dp"
+        android:visibility="visible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainFab3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/baseline_refresh_24"
         android:contentDescription="New Post"
         app:layout_constraintBottom_toBottomOf="@id/mainFab"
         app:layout_constraintEnd_toStartOf="@id/mainFab"
         android:layout_marginRight="20dp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

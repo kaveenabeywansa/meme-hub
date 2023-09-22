@@ -1,6 +1,7 @@
 package com.app.memes.memesocialmedia.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,13 @@ import java.util.List;
 public class PostListAdapter extends ArrayAdapter<Post> {
     private Context context;
     private List<Post> postList;
+    private Boolean isOnline = true;
 
-    public PostListAdapter(Context context, List<Post> posts) {
+    public PostListAdapter(Context context, List<Post> posts, Boolean isOnline) {
         super(context, R.layout.post_list_item, posts);
         this.context = context;
         this.postList = posts;
+        this.isOnline = isOnline;
     }
 
     @NonNull
@@ -46,7 +49,13 @@ public class PostListAdapter extends ArrayAdapter<Post> {
         post_author.setText((postList.get(position).getAuthor()));
         post_text.setText(postList.get(position).getText());
         post_likes.setText("\uD83D\uDD25" + postList.get(position).getLikes());
-        Picasso.with(context).load(postList.get(position).getImageLink()).into(post_image);
+        if (!isOnline) {
+            post_image.setBackgroundResource(R.drawable.offline_post);
+        } else if (postList.get(position).getImageLink() != null && postList.get(position).getImageLink().length() > 0) {
+            Picasso.with(context).load(postList.get(position).getImageLink()).into(post_image);
+        } else {
+            post_image.setBackgroundResource(R.drawable.notfound2);
+        }
 
         return convertView;
     }
