@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton mainFab;
     FloatingActionButton mainFab2;
     FloatingActionButton mainFab3;
+    ImageView img_no_data;
     private ListView updated_posts;
     private MemePostService memePostService;
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         memePostService = RetrofitClient.getClient().create(MemePostService.class);
+        img_no_data = findViewById(R.id.img_no_data);
         mainFab = findViewById(R.id.mainFab);
         mainFab2 = findViewById(R.id.mainFab2);
         mainFab3 = findViewById(R.id.mainFab3);
@@ -148,11 +150,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchAllMemes() {
+        img_no_data.setVisibility(View.GONE);
         if (!isNetworkAvailable()) {
             List<Post> offlineDataList = new LocalStorage(MainActivity.this).getOfflineData();
             if (offlineDataList != null && offlineDataList.size() > 0) {
-                Log.i("Print Test", "Offline data count" + offlineDataList.size());
                 updated_posts.setAdapter(new PostListAdapter(getApplicationContext(), offlineDataList, false));
+            } else {
+                img_no_data.setVisibility(View.VISIBLE);
             }
 
             return;
@@ -161,10 +165,6 @@ public class MainActivity extends AppCompatActivity {
         memePostService.getAll().enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
-                // hide error and no data images
-//                img_no_data.setVisibility(View.GONE);
-//                img_error.setVisibility(View.GONE);
-
                 PostsResponse postsResponse = (PostsResponse) response.body();
                 memeList = postsResponse.getPostList();
                 updated_posts.setAdapter(new PostListAdapter(getApplicationContext(), memeList, true));
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 // no data found. display no data image
                 if (memeList.size() < 1) {
                     Toast.makeText(getApplicationContext(), "No Data Found !", Toast.LENGTH_SHORT).show();
-//                    img_no_data.setVisibility(View.VISIBLE);
+                    img_no_data.setVisibility(View.VISIBLE);
                 }
             }
 
