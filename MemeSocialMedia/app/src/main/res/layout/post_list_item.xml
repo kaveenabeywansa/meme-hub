@@ -24,6 +24,12 @@
         android:layout_height="wrap_content"
         android:text="Sample description" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -47,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/design_default_color_primary_dark"
-            android:textColor="@color/white"
+            android:background="@drawable/button_outline"
+            android:textColor="@color/black"
             android:text="🔥 Fire" />
 
         <Button
@@ -56,8 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/design_default_color_primary_dark"
-            android:textColor="@color/white"
+            android:background="@drawable/button_outline"
+            android:textColor="@color/black"
             android:text="🥴 Boo" />
 
     </LinearLayout>
